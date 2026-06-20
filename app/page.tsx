@@ -261,10 +261,10 @@ export default function LandingPage() {
               { name: 'Vercel Edge Network', color: 'var(--text-primary)' },
               { name: 'Next.js 14', color: '#94A3B8' },
               { name: 'text-embedding-3-small', color: '#06B6D4' },
-            ].map(({ name, color, bg }) => (
-              <div key={name} className="glass rounded-lg px-4 py-2 text-xs font-medium"
-                style={{ color, borderColor: `${color}30`, background: bg ? `${bg}10` : undefined }}>
-                {name}
+            ].map((item: { name: string; color: string; bg?: string }) => (
+              <div key={item.name} className="glass rounded-lg px-4 py-2 text-xs font-medium"
+                style={{ color: item.color, borderColor: `${item.color}30`, background: item.bg ? `${item.bg}10` : undefined }}>
+                {item.name}
               </div>
             ))}
           </div>
