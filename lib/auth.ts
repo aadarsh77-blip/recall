@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import DiscordProvider from "next-auth/providers/discord"
+import AmazonProvider from "next-auth/providers/amazon"
 import CredentialsProvider from "next-auth/providers/credentials"
 import PostgresAdapter from "@auth/pg-adapter"
 import { Pool } from "pg"
@@ -23,6 +24,10 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID || "DISCORD_CLIENT_ID_PLACEHOLDER",
       clientSecret: process.env.DISCORD_CLIENT_SECRET || "DISCORD_CLIENT_SECRET_PLACEHOLDER",
+    }),
+    AmazonProvider({
+      clientId: process.env.AMAZON_CLIENT_ID || "AMAZON_CLIENT_ID_PLACEHOLDER",
+      clientSecret: process.env.AMAZON_CLIENT_SECRET || "AMAZON_CLIENT_SECRET_PLACEHOLDER",
     }),
     CredentialsProvider({
       name: "Email and Password",
