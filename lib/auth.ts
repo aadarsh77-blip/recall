@@ -1,7 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import DiscordProvider from "next-auth/providers/discord"
-import AmazonProvider from "next-auth/providers/amazon"
 import CredentialsProvider from "next-auth/providers/credentials"
 import PostgresAdapter from "@auth/pg-adapter"
 import { Pool } from "pg"
@@ -25,10 +24,27 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.DISCORD_CLIENT_ID || "DISCORD_CLIENT_ID_PLACEHOLDER",
       clientSecret: process.env.DISCORD_CLIENT_SECRET || "DISCORD_CLIENT_SECRET_PLACEHOLDER",
     }),
-    AmazonProvider({
+    {
+      id: "amazon",
+      name: "Amazon",
+      type: "oauth",
+      authorization: {
+        url: "https://www.amazon.com/ap/oa",
+        params: { scope: "profile" },
+      },
+      token: "https://api.amazon.com/auth/o2/token",
+      userinfo: "https://api.amazon.com/user/profile",
+      profile(profile) {
+        return {
+          id: profile.user_id,
+          name: profile.name,
+          email: profile.email,
+          image: null,
+        }
+      },
       clientId: process.env.AMAZON_CLIENT_ID || "AMAZON_CLIENT_ID_PLACEHOLDER",
       clientSecret: process.env.AMAZON_CLIENT_SECRET || "AMAZON_CLIENT_SECRET_PLACEHOLDER",
-    }),
+    },
     CredentialsProvider({
       name: "Email and Password",
       credentials: {
