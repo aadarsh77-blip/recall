@@ -331,8 +331,8 @@ function NotesTab({ notes, allTags, loading, onRefresh }: {
       if (!res.ok) throw new Error('Failed');
       setContent('');
       onRefresh();
-    } catch (e) {
-      alert('Failed to save note. Check your API keys and database connection.');
+    } catch (e: any) {
+      showError('Failed to save note. ' + (e.message || 'Check your API keys.'));
     } finally {
       setSubmitting(false);
     }
@@ -348,7 +348,7 @@ function NotesTab({ notes, allTags, loading, onRefresh }: {
   function openNoteByTitle(title: string) {
     const note = notes.find(n => n.title.toLowerCase() === title.toLowerCase());
     if (note) openNote(note);
-    else alert(`Note "${title}" not found in your knowledge base.`);
+    else showError(`Note "${title}" not found in your knowledge base.`);
   }
 
   async function togglePin(note: Note) {
