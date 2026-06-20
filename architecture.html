@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Recall — Architecture Diagram</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #020817;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 32px;
+  }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:1000px">
+  <defs>
+    <!-- Background grid -->
+    <pattern id="grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(99,102,241,0.06)" stroke-width="1"/>
+    </pattern>
+    <!-- Gradients -->
+    <linearGradient id="gUser" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="gVercel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/><stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="gAurora" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9900" stop-opacity="0.2"/><stop offset="100%" stop-color="#FF9900" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="gClaude" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D97706" stop-opacity="0.2"/><stop offset="100%" stop-color="#D97706" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="gLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0.1"/>
+    </linearGradient>
+    <!-- Arrow marker -->
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M 0 0 L 6 3 L 0 6 z" fill="#6366F1" opacity="0.6"/>
+    </marker>
+    <marker id="arrowAmber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M 0 0 L 6 3 L 0 6 z" fill="#F59E0B" opacity="0.6"/>
+    </marker>
+    <marker id="arrowCyan" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M 0 0 L 6 3 L 0 6 z" fill="#06B6D4" opacity="0.6"/>
+    </marker>
+    <!-- Glow filter -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="640" fill="#020817"/>
+  <rect width="1000" height="640" fill="url(#grid)"/>
+  <!-- Ambient glows -->
+  <circle cx="200" cy="200" r="200" fill="#6366F1" opacity="0.04"/>
+  <circle cx="800" cy="440" r="180" fill="#FF9900" opacity="0.04"/>
+
+  <!-- ── Title ──────────────────────────────────────── -->
+  <text x="500" y="36" text-anchor="middle" fill="#F1F5F9" font-size="20" font-weight="700" letter-spacing="-0.5">
+    🧠 Recall — System Architecture
+  </text>
+  <text x="500" y="56" text-anchor="middle" fill="#475569" font-size="11">
+    H0 Hackathon · Vercel v0 + AWS Aurora PostgreSQL + pgvector + Claude AI
+  </text>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- LAYER 1: USER -->
+  <!-- ════════════════════════════════════════════════ -->
+  <rect x="40" y="80" width="120" height="80" rx="14" fill="url(#gUser)" opacity="0.15" stroke="#6366F1" stroke-width="1.5"/>
+  <text x="100" y="112" text-anchor="middle" font-size="22">👤</text>
+  <text x="100" y="132" text-anchor="middle" fill="#A5B4FC" font-size="12" font-weight="600">User</text>
+  <text x="100" y="148" text-anchor="middle" fill="#475569" font-size="10">Browser / App</text>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- LAYER 2: VERCEL EDGE (Next.js) -->
+  <!-- ════════════════════════════════════════════════ -->
+  <rect x="220" y="60" width="300" height="500" rx="16" fill="url(#gVercel)" stroke="rgba(99,102,241,0.25)" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="370" y="86" text-anchor="middle" fill="#94A3B8" font-size="10" font-weight="600" letter-spacing="0.08em">VERCEL EDGE NETWORK</text>
+
+  <!-- Next.js Frontend -->
+  <rect x="240" y="96" width="260" height="60" rx="10" fill="#0F172A" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
+  <text x="270" y="122" fill="#E2E8F0" font-size="12" font-weight="600">Next.js 14 App Router</text>
+  <text x="270" y="139" fill="#475569" font-size="10">Landing · Dashboard · Notes · Ask AI · Graph</text>
+  <rect x="455" y="104" width="36" height="16" rx="4" fill="rgba(99,102,241,0.2)" stroke="rgba(99,102,241,0.4)" stroke-width="1"/>
+  <text x="473" y="116" text-anchor="middle" fill="#A5B4FC" font-size="9" font-weight="600">TSX</text>
+
+  <!-- API Routes box -->
+  <rect x="240" y="176" width="260" height="160" rx="10" fill="#080E1E" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <text x="370" y="198" text-anchor="middle" fill="#6366F1" font-size="11" font-weight="600">API Routes (Edge Functions)</text>
+
+  <!-- Individual routes -->
+  <rect x="252" y="208" width="112" height="28" rx="6" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.25)" stroke-width="1"/>
+  <text x="308" y="226" text-anchor="middle" fill="#94A3B8" font-size="10">POST /api/notes</text>
+
+  <rect x="374" y="208" width="112" height="28" rx="6" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.25)" stroke-width="1"/>
+  <text x="430" y="226" text-anchor="middle" fill="#94A3B8" font-size="10">GET /api/search</text>
+
+  <rect x="252" y="248" width="112" height="28" rx="6" fill="rgba(139,92,246,0.12)" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+  <text x="308" y="266" text-anchor="middle" fill="#C4B5FD" font-size="10">POST /api/ask ✦</text>
+
+  <rect x="374" y="248" width="112" height="28" rx="6" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.25)" stroke-width="1"/>
+  <text x="430" y="266" text-anchor="middle" fill="#94A3B8" font-size="10">GET /api/connections</text>
+
+  <rect x="252" y="288" width="234" height="38" rx="6" fill="rgba(6,182,212,0.08)" stroke="rgba(6,182,212,0.2)" stroke-width="1"/>
+  <text x="369" y="308" text-anchor="middle" fill="#67E8F9" font-size="10">RAG Pipeline: embed → retrieve → stream</text>
+  <text x="369" y="321" text-anchor="middle" fill="#475569" font-size="9">Streaming response via ReadableStream API</text>
+
+  <!-- Lib modules -->
+  <rect x="240" y="356" width="260" height="56" rx="10" fill="#080E1E" stroke="rgba(99,102,241,0.15)" stroke-width="1"/>
+  <text x="370" y="373" text-anchor="middle" fill="#475569" font-size="10" font-weight="600">lib/ modules</text>
+
+  <rect x="252" y="380" width="74" height="22" rx="5" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <text x="289" y="395" text-anchor="middle" fill="#94A3B8" font-size="9">db.ts (Pool)</text>
+
+  <rect x="334" y="380" width="74" height="22" rx="5" fill="rgba(217,119,6,0.1)" stroke="rgba(217,119,6,0.25)" stroke-width="1"/>
+  <text x="371" y="395" text-anchor="middle" fill="#FCD34D" font-size="9">ai.ts (Claude)</text>
+
+  <rect x="416" y="380" width="74" height="22" rx="5" fill="rgba(6,182,212,0.1)" stroke="rgba(6,182,212,0.25)" stroke-width="1"/>
+  <text x="453" y="395" text-anchor="middle" fill="#67E8F9" font-size="9">embeddings.ts</text>
+
+  <!-- Tailwind label -->
+  <rect x="240" y="432" width="260" height="108" rx="10" fill="#060C1A" stroke="rgba(99,102,241,0.12)" stroke-width="1"/>
+  <text x="370" y="450" text-anchor="middle" fill="#2D3748" font-size="10" font-weight="600">Frontend Stack</text>
+  <rect x="252" y="458" width="70" height="20" rx="4" fill="rgba(6,182,212,0.1)"/>
+  <text x="287" y="472" text-anchor="middle" fill="#67E8F9" font-size="9">Tailwind CSS</text>
+  <rect x="330" y="458" width="60" height="20" rx="4" fill="rgba(99,102,241,0.1)"/>
+  <text x="360" y="472" text-anchor="middle" fill="#A5B4FC" font-size="9">Framer Motion</text>
+  <rect x="398" y="458" width="90" height="20" rx="4" fill="rgba(99,102,241,0.08)"/>
+  <text x="443" y="472" text-anchor="middle" fill="#94A3B8" font-size="9">Lucide React Icons</text>
+  <text x="370" y="498" text-anchor="middle" fill="#2D3748" font-size="10">Neural Dark Design System</text>
+  <text x="370" y="513" text-anchor="middle" fill="#1E293B" font-size="9">pgvector HNSW · Semantic Search · Streaming Q&amp;A</text>
+  <text x="370" y="527" text-anchor="middle" fill="#1E293B" font-size="9">Auto-tagging · Knowledge Graph · Connection Discovery</text>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- LAYER 3: AURORA PostgreSQL -->
+  <!-- ════════════════════════════════════════════════ -->
+  <rect x="560" y="60" width="220" height="340" rx="16" fill="url(#gAurora)" stroke="rgba(255,153,0,0.3)" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="670" y="86" text-anchor="middle" fill="#FB923C" font-size="10" font-weight="600" letter-spacing="0.08em">AWS AURORA POSTGRESQL</text>
+
+  <!-- pgvector badge -->
+  <rect x="600" y="96" width="140" height="30" rx="8" fill="rgba(255,153,0,0.15)" stroke="rgba(255,153,0,0.4)" stroke-width="1.5"/>
+  <text x="670" y="116" text-anchor="middle" fill="#FCD34D" font-size="11" font-weight="700">pgvector extension ✦</text>
+
+  <!-- HNSW index detail -->
+  <rect x="578" y="140" width="184" height="46" rx="8" fill="#080E1A" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
+  <text x="670" y="158" text-anchor="middle" fill="#6366F1" font-size="10" font-weight="600">HNSW Index</text>
+  <text x="670" y="173" text-anchor="middle" fill="#475569" font-size="9">m=16, ef_construction=64</text>
+  <text x="670" y="183" text-anchor="middle" fill="#475569" font-size="9">Sub-10ms similarity search</text>
+
+  <!-- Tables -->
+  <text x="670" y="210" text-anchor="middle" fill="#94A3B8" font-size="10" font-weight="600">Tables</text>
+
+  <rect x="578" y="218" width="184" height="32" rx="6" fill="#060B16" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <text x="670" y="237" text-anchor="middle" fill="#94A3B8" font-size="9">📄 notes — content + vector(1536)</text>
+
+  <rect x="578" y="258" width="184" height="32" rx="6" fill="#060B16" stroke="rgba(6,182,212,0.2)" stroke-width="1"/>
+  <text x="670" y="277" text-anchor="middle" fill="#67E8F9" font-size="9">🔗 note_connections — similarity links</text>
+
+  <rect x="578" y="298" width="184" height="32" rx="6" fill="#060B16" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <text x="670" y="317" text-anchor="middle" fill="#94A3B8" font-size="9">💬 qa_history — Q&amp;A audit trail</text>
+
+  <!-- Semantic search SQL -->
+  <rect x="578" y="346" width="184" height="44" rx="8" fill="#02060F" stroke="rgba(99,102,241,0.15)" stroke-width="1"/>
+  <text x="588" y="364" fill="#475569" font-size="9" font-family="monospace">SELECT * FROM search_notes(</text>
+  <text x="588" y="377" fill="#475569" font-size="9" font-family="monospace">  $query_vec, $ws, 0.25, 10</text>
+  <text x="588" y="390" fill="#475569" font-size="9" font-family="monospace">)</text>
+
+  <!-- Aurora benefits -->
+  <rect x="560" y="416" width="220" height="80" rx="12" fill="rgba(255,153,0,0.06)" stroke="rgba(255,153,0,0.15)" stroke-width="1"/>
+  <text x="670" y="436" text-anchor="middle" fill="#FB923C" font-size="10" font-weight="600">Why Aurora PostgreSQL?</text>
+  <text x="670" y="453" text-anchor="middle" fill="#475569" font-size="9">✓ Native pgvector + HNSW indexing</text>
+  <text x="670" y="466" text-anchor="middle" fill="#475569" font-size="9">✓ Auto-scaling storage to 128TB</text>
+  <text x="670" y="479" text-anchor="middle" fill="#475569" font-size="9">✓ ACID + vector in one database</text>
+  <text x="670" y="492" text-anchor="middle" fill="#475569" font-size="9">✓ Global Database for multi-region</text>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- LAYER 4: AI SERVICES -->
+  <!-- ════════════════════════════════════════════════ -->
+  <rect x="800" y="60" width="180" height="340" rx="16" fill="url(#gClaude)" stroke="rgba(217,119,6,0.25)" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="890" y="86" text-anchor="middle" fill="#FCD34D" font-size="10" font-weight="600" letter-spacing="0.08em">AI SERVICES</text>
+
+  <!-- Claude -->
+  <rect x="816" y="96" width="148" height="140" rx="10" fill="#0A0600" stroke="rgba(217,119,6,0.3)" stroke-width="1.5"/>
+  <text x="890" y="118" text-anchor="middle" fill="#FCD34D" font-size="12" font-weight="700">Claude</text>
+  <text x="890" y="132" text-anchor="middle" fill="#6B7280" font-size="9">claude-sonnet-4-6</text>
+  <line x1="826" y1="140" x2="954" y2="140" stroke="rgba(217,119,6,0.15)" stroke-width="1"/>
+  <text x="826" y="156" fill="#6B7280" font-size="9">• RAG Q&amp;A generation</text>
+  <text x="826" y="170" fill="#6B7280" font-size="9">• Streaming responses</text>
+  <text x="826" y="184" fill="#6B7280" font-size="9">• Note auto-tagging</text>
+  <text x="826" y="198" fill="#6B7280" font-size="9">• Title + summary</text>
+  <text x="826" y="212" fill="#6B7280" font-size="9">• Connection reasons</text>
+  <text x="826" y="226" fill="#6B7280" font-size="9">• Knowledge insights</text>
+
+  <!-- OpenAI Embeddings -->
+  <rect x="816" y="252" width="148" height="110" rx="10" fill="#00040A" stroke="rgba(6,182,212,0.25)" stroke-width="1.5"/>
+  <text x="890" y="272" text-anchor="middle" fill="#67E8F9" font-size="12" font-weight="700">OpenAI</text>
+  <text x="890" y="287" text-anchor="middle" fill="#6B7280" font-size="9">text-embedding-3-small</text>
+  <line x1="826" y1="295" x2="954" y2="295" stroke="rgba(6,182,212,0.15)" stroke-width="1"/>
+  <text x="826" y="311" fill="#6B7280" font-size="9">• 1536-dim vectors</text>
+  <text x="826" y="325" fill="#6B7280" font-size="9">• Note indexing</text>
+  <text x="826" y="339" fill="#6B7280" font-size="9">• Query embedding</text>
+  <text x="826" y="353" fill="#6B7280" font-size="9">• ~$0.00003 per note</text>
+
+  <!-- Cost note -->
+  <rect x="800" y="416" width="180" height="80" rx="12" fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.15)" stroke-width="1"/>
+  <text x="890" y="436" text-anchor="middle" fill="#34D399" font-size="10" font-weight="600">Cost Efficiency</text>
+  <text x="890" y="452" text-anchor="middle" fill="#475569" font-size="9">Claude: $3/M input tokens</text>
+  <text x="890" y="466" text-anchor="middle" fill="#475569" font-size="9">Embedding: $0.02/M tokens</text>
+  <text x="890" y="480" text-anchor="middle" fill="#475569" font-size="9">1000-note KB ≈ $0.03 total</text>
+  <text x="890" y="494" text-anchor="middle" fill="#475569" font-size="9">85%+ gross margin at scale</text>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- FLOW ARROWS -->
+  <!-- ════════════════════════════════════════════════ -->
+
+  <!-- User → Vercel -->
+  <path d="M 162 120 L 218 120" stroke="#6366F1" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.7"/>
+  <text x="190" y="114" text-anchor="middle" fill="#4B5563" font-size="9">HTTPS</text>
+
+  <!-- Vercel → Aurora (write) -->
+  <path d="M 502 234 L 558 234" stroke="#6366F1" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.6"/>
+  <text x="530" y="228" text-anchor="middle" fill="#4B5563" font-size="9">SQL + vector</text>
+
+  <!-- Vercel → Aurora (search) -->
+  <path d="M 502 278 L 558 278" stroke="#06B6D4" stroke-width="1.5" marker-end="url(#arrowCyan)" opacity="0.6"/>
+  <text x="530" y="292" text-anchor="middle" fill="#4B5563" font-size="9">&lt;=&gt; cosine</text>
+
+  <!-- Vercel → Claude -->
+  <path d="M 502 310 Q 650 310 798 190" stroke="#D97706" stroke-width="1.5" fill="none" marker-end="url(#arrowAmber)" opacity="0.6"/>
+  <text x="680" y="304" fill="#6B7280" font-size="9">RAG + stream</text>
+
+  <!-- Vercel → OpenAI -->
+  <path d="M 502 380 Q 640 380 798 320" stroke="#06B6D4" stroke-width="1.5" fill="none" marker-end="url(#arrowCyan)" opacity="0.5"/>
+  <text x="680" y="374" fill="#4B5563" font-size="9">embed(text)</text>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- RAG FLOW DETAIL (bottom) -->
+  <!-- ════════════════════════════════════════════════ -->
+  <rect x="40" y="564" width="920" height="58" rx="12" fill="rgba(99,102,241,0.04)" stroke="rgba(99,102,241,0.12)" stroke-width="1"/>
+  <text x="500" y="582" text-anchor="middle" fill="#6366F1" font-size="10" font-weight="700" letter-spacing="0.05em">RAG PIPELINE FLOW (Ask AI feature)</text>
+
+  <!-- Steps -->
+  <rect x="56" y="590" width="120" height="24" rx="6" fill="rgba(99,102,241,0.12)" stroke="rgba(99,102,241,0.25)" stroke-width="1"/>
+  <text x="116" y="606" text-anchor="middle" fill="#A5B4FC" font-size="9">① User asks question</text>
+
+  <text x="186" y="606" text-anchor="middle" fill="#4B5563" font-size="11">→</text>
+
+  <rect x="196" y="590" width="130" height="24" rx="6" fill="rgba(6,182,212,0.1)" stroke="rgba(6,182,212,0.2)" stroke-width="1"/>
+  <text x="261" y="606" text-anchor="middle" fill="#67E8F9" font-size="9">② Embed(question) → vec</text>
+
+  <text x="336" y="606" text-anchor="middle" fill="#4B5563" font-size="11">→</text>
+
+  <rect x="346" y="590" width="158" height="24" rx="6" fill="rgba(255,153,0,0.1)" stroke="rgba(255,153,0,0.2)" stroke-width="1"/>
+  <text x="425" y="606" text-anchor="middle" fill="#FCD34D" font-size="9">③ pgvector → top-8 similar notes</text>
+
+  <text x="514" y="606" text-anchor="middle" fill="#4B5563" font-size="11">→</text>
+
+  <rect x="524" y="590" width="170" height="24" rx="6" fill="rgba(217,119,6,0.1)" stroke="rgba(217,119,6,0.2)" stroke-width="1"/>
+  <text x="609" y="606" text-anchor="middle" fill="#FCD34D" font-size="9">④ Claude synthesizes cited answer</text>
+
+  <text x="704" y="606" text-anchor="middle" fill="#4B5563" font-size="11">→</text>
+
+  <rect x="714" y="590" width="130" height="24" rx="6" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+  <text x="779" y="606" text-anchor="middle" fill="#34D399" font-size="9">⑤ Stream to user in real-time</text>
+
+  <text x="854" y="606" text-anchor="middle" fill="#4B5563" font-size="11">→</text>
+
+  <rect x="864" y="590" width="88" height="24" rx="6" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <text x="908" y="606" text-anchor="middle" fill="#A5B4FC" font-size="9">⑥ Save to history</text>
+</svg>
+</body>
+</html>
