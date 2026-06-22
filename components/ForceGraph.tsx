@@ -48,7 +48,9 @@ export default function ForceGraph({ nodes, edges, onNodeClick, width, height })
         name: n.title,
         groupId: groupId,
         val: 5 + Math.min(n.degree * 2, 12),
-        color: color
+        color: color,
+        summary: n.summary,
+        tags: n.tags
       });
 
       // Strongly link note to its group center
@@ -89,6 +91,17 @@ export default function ForceGraph({ nodes, edges, onNodeClick, width, height })
       width={width}
       height={height}
       graphData={graphData}
+      nodeLabel={node => {
+        if (node.isGroup) return `<div style="background: rgba(15,23,42,0.9); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); color: #fff; font-family: sans-serif; font-size: 13px;"><strong>Category:</strong> ${node.name}</div>`;
+        const tagsHtml = (node.tags || []).map((t: string) => `<span style="color:#A5B4FC; margin-right: 4px;">#${t}</span>`).join('');
+        return `
+          <div style="background: rgba(15,23,42,0.95); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); max-width: 250px; font-family: sans-serif;">
+            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #f8fafc;">${node.name}</div>
+            ${tagsHtml ? `<div style="font-size: 11px; margin-bottom: 8px;">${tagsHtml}</div>` : ''}
+            ${node.summary ? `<div style="font-size: 12px; color: #94a3b8; line-height: 1.4;">${node.summary}</div>` : ''}
+          </div>
+        `;
+      }}
       nodeRelSize={1}
       linkWidth={link => link.isGroupLink ? 0 : Math.max(0.5, link.similarity * 2)}
       linkColor={link => link.isGroupLink ? 'transparent' : `rgba(156, 163, 175, ${link.similarity * 0.3})`}

@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
        JOIN notes n2 ON n2.id = nc.to_note_id
        WHERE n1.workspace_id = $1
          AND nc.from_note_id < nc.to_note_id  -- deduplicate bidirectional edges
+         AND n1.title != n2.title             -- ignore connections between identical titles
          AND nc.similarity_score > 0.45
        ORDER BY nc.similarity_score DESC
        LIMIT 200`,

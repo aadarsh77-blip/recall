@@ -25,9 +25,9 @@ export async function POST(request: NextRequest) {
     const questionEmbedding = await generateEmbedding(question);
     const vectorStr = toVectorString(questionEmbedding);
 
-    // Step 2: Retrieve top-8 most relevant notes from Aurora pgvector
+    // Step 2: Retrieve top-3 most relevant notes from Aurora pgvector to avoid TPM limits
     const relevantNotes = await queryMany<SearchResult>(
-      `SELECT * FROM search_notes($1::vector, $2, 0.2, 8)`,
+      `SELECT * FROM search_notes($1::vector, $2, 0.2, 3)`,
       [vectorStr, await getUserWorkspace()]
     );
 

@@ -6,44 +6,9 @@ interface AIProvider {
 }
 
 const providers: AIProvider[] = [
-  // Groq
   {
     client: new OpenAI({ apiKey: process.env.GROQ_API_KEY_1 || '', baseURL: 'https://api.groq.com/openai/v1' }),
     model: 'llama-3.1-8b-instant'
-  },
-  {
-    client: new OpenAI({ apiKey: process.env.GROQ_API_KEY_2 || '', baseURL: 'https://api.groq.com/openai/v1' }),
-    model: 'llama-3.1-8b-instant'
-  },
-  {
-    client: new OpenAI({ apiKey: process.env.GROQ_API_KEY_3 || '', baseURL: 'https://api.groq.com/openai/v1' }),
-    model: 'llama-3.1-8b-instant'
-  },
-  {
-    client: new OpenAI({ apiKey: process.env.GROQ_API_KEY_4 || '', baseURL: 'https://api.groq.com/openai/v1' }),
-    model: 'llama-3.1-8b-instant'
-  },
-  // OpenRouter
-  {
-    client: new OpenAI({ 
-      apiKey: process.env.OPENROUTER_API_KEY_1 || '', 
-      baseURL: 'https://openrouter.ai/api/v1',
-      defaultHeaders: { 'HTTP-Referer': 'http://localhost:3000', 'X-Title': 'Recall AI' }
-    }),
-    model: 'meta-llama/llama-3.3-70b-instruct'
-  },
-  {
-    client: new OpenAI({ 
-      apiKey: process.env.OPENROUTER_API_KEY_2 || '', 
-      baseURL: 'https://openrouter.ai/api/v1',
-      defaultHeaders: { 'HTTP-Referer': 'http://localhost:3000', 'X-Title': 'Recall AI' }
-    }),
-    model: 'meta-llama/llama-3.3-70b-instruct'
-  },
-  // DeepSeek
-  {
-    client: new OpenAI({ apiKey: process.env.DEEPSEEK_API_KEY || '', baseURL: 'https://api.deepseek.com' }),
-    model: 'deepseek-chat'
   }
 ];
 
@@ -228,7 +193,7 @@ export async function askWithContext(
 ): Promise<AsyncIterable<string>> {
   const context = relevantNotes
     .map((note, i) =>
-      `[Source ${i + 1}: "${note.title}" (similarity: ${(note.similarity * 100).toFixed(0)}%)]\n${note.content}`
+      `[Source ${i + 1}: "${note.title}" (similarity: ${(note.similarity * 100).toFixed(0)}%)]\n${note.content.substring(0, 3000)}${note.content.length > 3000 ? '... [truncated]' : ''}`
     )
     .join('\n\n---\n\n');
 

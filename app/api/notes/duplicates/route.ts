@@ -40,20 +40,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing keepId or deleteId' }, { status: 400 });
     }
 
-    // Move connections from deleteId to keepId before deleting
+    // Move connections from deleteId to keepId before deleting, avoiding unique constraint violations
     await query(`
-      UPDATE note_connections 
-      SET from_note_id = $1 
-      WHERE from_note_id = $2
+      INSERT INTO note_connections (from_note_id, to_note_id, similarity_score, connection_type, connection_reason)
+      SELECT $1, to_note_id, similarity_score, connection_type, connection_reason 
+      FROM note_connections 
+      WHERE from_note_id = $2 AND to_note_id != $1
+      ON CONFLICT (from_note_id, to_note_id) DO NOTHING
     `, [keepId, deleteId]);
 
     await query(`
-      UPDATE note_connections 
-      SET to_note_id = $1 
-      WHERE to_note_id = $2
+      INSERT INTO note_connections (from_note_id, to_note_id, similarity_score, connection_type, connection_reason)
+      SELECT from_note_id, $1, similarity_score, connection_type, connection_reason 
+      FROM note_connections 
+      WHERE to_note_id = $2 AND from_note_id != $1
+      ON CONFLICT (from_note_id, to_note_id) DO NOTHING
     `, [keepId, deleteId]);
 
-    // Finally delete the duplicate note
+    // Finally delete the duplicate note (this will CASCADE delete the old note_connections for deleteId)
     await query(`DELETE FROM notes WHERE id = $1 AND workspace_id = $2`, [deleteId, await getUserWorkspace()]);
 
     return NextResponse.json({ success: true }, { status: 200 });
